@@ -1,0 +1,47 @@
+{
+  "name": "explorer-v2",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "prepare": "panda codegen",
+    "dev": "vite dev --port 3000",
+    "build": "vite build",
+    "serve": "vite preview",
+    "test": "vitest run",
+    "format": "biome format",
+    "lint": "biome lint",
+    "check": "biome check"
+  },
+  "dependencies": {
+    "@ark-ui/react": "5.26.0",
+    "@tanstack/react-devtools": "0.7.6",
+    "@tanstack/react-router": "1.132.47",
+    "@tanstack/react-router-devtools": "1.132.51",
+    "@tanstack/react-router-ssr-query": "1.132.47",
+    "@tanstack/react-start": "1.132.56",
+    "@tanstack/router-plugin": "1.132.56",
+    "lucide-react": "0.545.0",
+    "react": "19.2.0",
+    "react-dom": "19.2.0",
+    "superjson": "2.2.2",
+    "vite-tsconfig-paths": "5.1.4",
+    "zod": "4.1.12"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "2.2.4",
+    "@pandacss/dev": "1.4.2",
+    "@pandacss/preset-base": "1.4.2",
+    "@pandacss/preset-panda": "1.4.2",
+    "@testing-library/dom": "10.4.1",
+    "@testing-library/react": "16.3.0",
+    "@types/node": "^22.10.2",
+    "@types/react": "~19.2.0",
+    "@types/react-dom": "~19.2.0",
+    "@vitejs/plugin-react": "5.0.4",
+    "jsdom": "27.0.0",
+    "typescript": "5.9.3",
+    "vite": "7.1.9",
+    "vitest": "3.2.4",
+    "web-vitals": "5.1.0"
+  }
+}
