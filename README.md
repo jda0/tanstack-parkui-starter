@@ -54,7 +54,7 @@ npx -y @park-ui/cli components add ‹component›
 
 > [!CAUTION]
 > Park UI v1 is currently in development the CLI is not stable. All recipes have
-been installed already.
+> been installed already.
 
 Recipes installed from Park UI should be saved to `lib/park-ui`.
 
@@ -104,7 +104,8 @@ function Component() {
 }
 ```
 
-- Panda can use style props, but that feature is disabled in this project.
+- Panda can use style props, but that feature is disabled in this project with the exception of `css` and those explicitly exported by ParkUI (such as `variant`);
+  `css={…}` is equivalent to `className={css(…)}`. Patterns are accessible as JSX elements (e.g. `<div className={center(…)}>…</div>` as `<Center css={…}>…</Center>`).
 
 ### Main Differences from Tailwind
 
