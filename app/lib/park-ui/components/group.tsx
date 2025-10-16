@@ -1,4 +1,4 @@
-import { ark } from '@ark-ui/react'
+import { ark } from "@ark-ui/react";
 import {
   Children,
   type ComponentProps,
@@ -9,97 +9,115 @@ import {
   memo,
   type ReactElement,
   useMemo,
-} from 'react'
-import { styled } from 'styled-system/jsx'
-import { group } from 'styled-system/recipes'
+} from "react";
+import { css, cx } from "styled-system/css";
+import { styled } from "styled-system/jsx";
+import { group } from "styled-system/recipes";
+import type { SystemStyleObject } from "styled-system/types";
 
-type StyledGroupProps = ComponentProps<typeof StyledGroup>
-const StyledGroup = styled(ark.div, group)
+type StyledGroupProps = ComponentProps<typeof StyledGroup>;
+const StyledGroup = styled(ark.div, group);
 
 export interface GroupProps extends StyledGroupProps {
   /**
    * The `alignItems` style property
    */
-  align?: StyledGroupProps['alignItems'] | undefined
+  align?: SystemStyleObject["alignItems"] | undefined;
   /**
    * The `justifyContent` style property
    */
-  justify?: StyledGroupProps['justifyContent'] | undefined
+  justify?: SystemStyleObject["justifyContent"] | undefined;
   /**
    * The `flexWrap` style property
    */
-  wrap?: StyledGroupProps['flexWrap'] | undefined
+  wrap?: SystemStyleObject["flexWrap"] | undefined;
   /**
    * A function that determines if a child should be skipped
    */
-  skip?: (child: ReactElement) => boolean | undefined
+  skip?: (child: ReactElement) => boolean | undefined;
 }
 
 export const Group = memo(
   forwardRef<HTMLDivElement, GroupProps>(function Group(props, ref) {
-    const { align = 'center', justify = 'flex-start', children, wrap, skip, ...rest } = props
+    const {
+      align = "center",
+      children,
+      className,
+      justify = "flex-start",
+      skip,
+      wrap,
+      ...rest
+    } = props;
 
     const enhancedChildren = useMemo(() => {
       // Convert children to array and filter out invalid elements
-      const childArray = Children.toArray(children).filter(isValidElement)
+      const childArray = Children.toArray(children).filter(isValidElement);
 
       // If only one child, no need for group enhancements
       if (childArray.length === 1) {
-        return childArray
+        return childArray;
       }
 
       // Filter out skipped children to get valid children for indexing
-      const validChildren = childArray.filter((child) => !skip?.(child))
+      const validChildren = childArray.filter((child) => !skip?.(child));
 
       // If only one valid child after filtering, return original array
       if (validChildren.length === 1) {
-        return childArray
+        return childArray;
       }
 
       // Enhance each child with group data attributes
       return childArray.map((child) => {
         // Skip enhancement for children that should be skipped
         if (skip?.(child)) {
-          return child
+          return child;
         }
 
         const childProps = child.props as Record<string, unknown> & {
-          style?: CSSProperties
-        }
+          style?: CSSProperties;
+        };
 
-        const indexInValidChildren = validChildren.indexOf(child)
+        const indexInValidChildren = validChildren.indexOf(child);
 
         const enhancedProps: Record<string, unknown> = {
           ...childProps,
-          'data-group-item': '',
-          'data-first': dataAttr(indexInValidChildren === 0),
-          'data-last': dataAttr(indexInValidChildren === validChildren.length - 1),
-          'data-between': dataAttr(
-            indexInValidChildren > 0 && indexInValidChildren < validChildren.length - 1,
+          "data-group-item": "",
+          "data-first": dataAttr(indexInValidChildren === 0),
+          "data-last": dataAttr(
+            indexInValidChildren === validChildren.length - 1
+          ),
+          "data-between": dataAttr(
+            indexInValidChildren > 0 &&
+              indexInValidChildren < validChildren.length - 1
           ),
           style: {
-            '--group-count': validChildren.length,
-            '--group-index': indexInValidChildren,
+            "--group-count": validChildren.length,
+            "--group-index": indexInValidChildren,
             ...(childProps?.style ?? {}),
           } as CSSProperties & {
-            '--group-count': number
-            '--group-index': number
+            "--group-count": number;
+            "--group-index": number;
           },
-        }
+        };
 
-        return cloneElement(child, enhancedProps)
-      })
-    }, [children, skip])
+        return cloneElement(child, enhancedProps);
+      });
+    }, [children, skip]);
+
+    const klassName = cx(
+      css({ alignItems: align, justifyContent: justify, flexWrap: wrap }),
+      className
+    );
 
     return (
-      <StyledGroup ref={ref} alignItems={align} justifyContent={justify} flexWrap={wrap} {...rest}>
+      <StyledGroup ref={ref} className={klassName} {...rest}>
         {enhancedChildren}
       </StyledGroup>
-    )
-  }),
-)
+    );
+  })
+);
 
-type Booleanish = boolean | 'true' | 'false'
+type Booleanish = boolean | "true" | "false";
 
 const dataAttr = (condition: boolean | undefined): Booleanish =>
-  (condition ? '' : undefined) as Booleanish
+  (condition ? "" : undefined) as Booleanish;

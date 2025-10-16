@@ -1,35 +1,12 @@
-import { createFileRoute, redirect } from "@tanstack/react-router";
-import { createIsomorphicFn } from "@tanstack/react-start";
-import { getRequest } from "@tanstack/react-start/server";
+import { createFileRoute } from "@tanstack/react-router";
 import * as lu from "lucide-react";
 import { AbsoluteCenter, Alert, Text } from "$/park-ui/components";
 import { Link } from "$/park-ui/tanstack";
-import { auth } from "$/auth.server";
-import { authClient } from "$/auth.client";
-
-const getSession = createIsomorphicFn()
-  .server(function () {
-    const { headers } = getRequest();
-    return auth.api.getSession({ headers });
-  })
-  .client(function () {
-    return authClient.getSession();
-  });
+import { authenticate } from "@/loaders/auth";
 
 export const Route = createFileRoute("/")({
+  beforeLoad: authenticate,
   component: App,
-  beforeLoad: async function ({}) {
-    const session = await getSession();
-    if (!session || "error" in session) {
-      console.warn("Invalid session:", session?.error);
-      throw redirect({
-        to: "/login",
-        search: { callbackURL: location.pathname },
-      });
-    }
-
-    return session;
-  },
 });
 
 function App() {
